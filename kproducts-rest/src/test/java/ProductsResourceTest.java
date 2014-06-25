@@ -3,6 +3,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kiwi.domain.PriceMapper;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 import org.kiwi.resource.exception.ProductNotFoundException;
@@ -30,6 +31,9 @@ public class ProductsResourceTest extends JerseyTest {
     @Mock
     private ProductRepository mockProductRepository;
 
+    @Mock
+    private PriceMapper mockPriceMapper;
+
     @Override
     protected Application configure() {
         return new ResourceConfig()
@@ -39,6 +43,8 @@ public class ProductsResourceTest extends JerseyTest {
                     @Override
                     protected void configure() {
                         bind(mockProductRepository).to(ProductRepository.class);
+                        bind(mockPriceMapper).to(PriceMapper.class);
+
                     }
                 });
     }

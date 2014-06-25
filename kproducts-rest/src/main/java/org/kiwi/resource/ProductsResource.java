@@ -1,5 +1,6 @@
 package org.kiwi.resource;
 
+import org.kiwi.domain.PriceMapper;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 import org.kiwi.json.CreateProductJson;
@@ -19,9 +20,12 @@ public class ProductsResource {
     @Inject
     private ProductRepository productRepository;
 
+    @Inject
+    private PriceMapper priceMapper;
+
     @Path("{productId}/prices")
     public PricesResource getPriceOfProduct(@PathParam("productId") int productId) {
-        return new PricesResource();
+        return new PricesResource(productRepository.findProductById(productId), priceMapper);
     }
 
     @GET
