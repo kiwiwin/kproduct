@@ -7,6 +7,7 @@ import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 import org.kiwi.resource.exception.ProductNotFoundException;
 import org.kiwi.resource.exception.ProductNotFoundExceptionHandler;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -15,9 +16,12 @@ import javax.ws.rs.core.Response;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
+
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,7 +44,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_products() {
-        when(mockProductRepository.all()).thenReturn(Arrays.asList(new Product("first"), new Product("second")));
+        when(mockProductRepository.all()).thenReturn(Arrays.asList(new Product(1, "first"), new Product(2, "second")));
 
         final Response response = target("/products")
                 .request()
@@ -49,18 +53,27 @@ public class ProductsResourceTest extends JerseyTest {
         assertThat(response.getStatus(), is(200));
         final List products = response.readEntity(List.class);
         assertThat(products.size(), is(2));
+
+        final Map product = (Map)products.get(0);
+        assertThat(product.get("name"), is("first"));
+        assertThat((String)product.get("uri"), endsWith("products/1"));
     }
 
     @Test
     public void should_get_one_product() {
-        when(mockProductRepository.findProductById(1)).thenReturn(new Product("first"));
+        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first"));
 
         final Response response = target("/products/1")
                 .request()
                 .get();
 
         assertThat(response.getStatus(), is(200));
+        final Map product = response.readEntity(Map.class);
+
+        assertThat(product.get("name"), is("first"));
+        assertThat((String)product.get("uri"), endsWith("products/1"));
     }
+
 
     @Test
     public void should_get_404_when_product_not_found() {

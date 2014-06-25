@@ -8,7 +8,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,16 +21,16 @@ public class ProductsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<ProductRefJson> getAllProducts() {
+    public List<ProductRefJson> getAllProducts(@Context UriInfo uriInfo) {
         return productRepository.all().stream()
-                .map(product -> new ProductRefJson(product))
+                .map(product -> new ProductRefJson(uriInfo, product))
                 .collect(Collectors.toList());
     }
 
     @GET
     @Path("{productId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ProductRefJson getProduct(@PathParam("productId") int productId) {
-        return new ProductRefJson(productRepository.findProductById(productId));
+    public ProductRefJson getProduct(@PathParam("productId") int productId, @Context UriInfo uriInfo) {
+        return new ProductRefJson(uriInfo, productRepository.findProductById(productId));
     }
 }
