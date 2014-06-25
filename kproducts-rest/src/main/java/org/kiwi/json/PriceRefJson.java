@@ -24,4 +24,8 @@ public class PriceRefJson {
     public String getUri() {
         return uriInfo.getBaseUri() + "products/" + product.getId() + "/prices/" + price.getId();
     }
+
+    public String getModifiedBy() {
+        return price.getModifiedBy();
+    }
 }

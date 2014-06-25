@@ -1,16 +1,13 @@
 package org.kiwi.domain;
 
 public class Price {
-    private int price;
     int id;
+    private int price;
+    private String modifiedBy;
 
-    public Price(int price) {
+    public Price(int price, String modifiedBy) {
         this.price = price;
-    }
-
-    public Price(int id, int price) {
-        this.id = id;
-        this.price = price;
+        this.modifiedBy = modifiedBy;
     }
 
     public int getPrice() {
@@ -19,5 +16,9 @@ public class Price {
 
     public int getId() {
         return id;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 }

@@ -54,7 +54,7 @@ public class PricesResourceTest extends JerseyTest {
     @Test
     public void should_get_all_prices_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
-        when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(new Price(1, 120), new Price(2, 200)));
+        when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(priceWithId(1, new Price(120, "kiwi")), priceWithId(2, new Price(200, "kiwi"))));
 
         final Response response = target("/products/1/prices")
                 .request()
@@ -74,7 +74,7 @@ public class PricesResourceTest extends JerseyTest {
     @Test
     public void should_get_price_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(productWithId(1, new Product("first", "good")));
-        when(mockPriceMapper.getPrice(anyObject(), eq(2))).thenReturn(priceWithId(2, new Price(300)));
+        when(mockPriceMapper.getPrice(anyObject(), eq(2))).thenReturn(priceWithId(2, new Price(300, "kiwi")));
 
         final Response response = target("/products/1/prices/2")
                 .request()
@@ -86,13 +86,14 @@ public class PricesResourceTest extends JerseyTest {
         final Map price = response.readEntity(Map.class);
 
         assertThat(price.get("price"), is(300));
+        assertThat(price.get("modifiedBy"), is("kiwi"));
         assertThat((String) price.get("uri"), endsWith("products/1/prices/2"));
     }
 
     @Test
     public void should_create_new_price_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(productWithId(1, new Product("first", "good")));
-        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(priceWithId(3, new Price(300)));
+        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(priceWithId(3, new Price(300, "kiwi")));
 
         HashMap newPriceJson = new HashMap<String, String>();
         newPriceJson.put("price", 300);

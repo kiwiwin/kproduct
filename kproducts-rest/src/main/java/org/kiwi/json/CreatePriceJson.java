@@ -10,6 +10,6 @@ public class CreatePriceJson {
     }
 
     public Price getPrice() {
-        return new Price(price);
+        return new Price(price, "kiwi");
     }
 }
