@@ -9,4 +9,6 @@ public interface ProductMapper {
     int createProduct(@Param("product") Product product);
 
     List<Product> all();
+
+    Product findProductById(int productId);
 }

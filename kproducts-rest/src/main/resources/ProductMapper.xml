@@ -16,4 +16,8 @@
     <select id="all" resultMap="resultProduct">
         select * from Products;
     </select>
+
+    <select id="findProductById" resultMap="resultProduct">
+        select * from Products where id=#{id};
+    </select>
 </mapper>
