@@ -9,7 +9,7 @@ import java.util.List;
 public interface PriceMapper {
     public List<Price> getProductPrices(Product productId);
 
-    Price getPrice(Product product, int priceId);
+    Price getPrice(@Param("product") Product product, @Param("priceId") int priceId);
 
     int createPrice(@Param("product") Product product, @Param("price") Price price);
 }

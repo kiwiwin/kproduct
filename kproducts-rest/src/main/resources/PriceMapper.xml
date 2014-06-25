@@ -3,16 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kiwi.persistent.PriceMapper">
+
     <resultMap id="resultPrice" type="org.kiwi.domain.Price">
         <id property="id" column="id"/>
-        <result property="timestamp" column="timestamp"/>
         <result property="price" column="price"/>
-        <result property="modifiedBy" column="modified_by"/>
+        <result property="modifiedTimestamp" column="modifiedTimestamp"/>
+        <result property="modifiedBy" column="modifiedBy"/>
     </resultMap>
 
     <insert id="createPrice" parameterType="map" keyProperty="price.id" useGeneratedKeys="true">
         insert into Prices (price, modified_timestamp, modified_by, product_id) values
         (#{price.price}, #{price.modifiedTimestamp}, #{price.modifiedBy}, #{product.id})
     </insert>
+
+    <select id="getPrice" parameterType="map" resultMap="resultPrice">
+        select Prices.id as id, Prices.price as price, Prices.modified_timestamp as modifiedTimestamp,
+        Prices.modified_by as modifiedBy
+        from Prices where Prices.product_id = #{product.id} and Prices.id = #{priceId}
+    </select>
 
 </mapper>
