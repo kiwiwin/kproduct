@@ -54,7 +54,7 @@ public class PricesResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_prices_of_a_product() {
-        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
+        when(mockProductRepository.findProductById(1)).thenReturn(productWithId(1, new Product("first", "good")));
         when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(priceWithId(1, new Price(120, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0))), priceWithId(2, new Price(200, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0)))));
 
         final Response response = target("/products/1/prices")

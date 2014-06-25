@@ -55,7 +55,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_products() {
-        when(mockProductRepository.all()).thenReturn(Arrays.asList(productWithId(1, new Product("first", "good")), productWithId(2, new Product(2, "second", "good"))));
+        when(mockProductRepository.all()).thenReturn(Arrays.asList(productWithId(1, new Product("first", "good")), productWithId(2, new Product("second", "good"))));
 
         final Response response = target("/products")
                 .request()
@@ -100,7 +100,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_create_product() {
-        final Product newProduct = new Product(1, "new product", "good");
+        final Product newProduct = productWithId(1, new Product("new product", "good"));
         when(mockProductRepository.createProduct(anyObject())).thenReturn(newProduct);
 
         HashMap newProductJson = new HashMap<String, String>();
