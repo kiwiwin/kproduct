@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
+import org.kiwi.resource.exception.ProductNotFoundException;
+import org.kiwi.resource.exception.ProductNotFoundExceptionHandler;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -27,6 +29,7 @@ public class ProductsResourceTest extends JerseyTest {
     protected Application configure() {
         return new ResourceConfig()
                 .packages(true, "org.kiwi.resource")
+                .register(ProductNotFoundExceptionHandler.class)
                 .register(new AbstractBinder() {
                     @Override
                     protected void configure() {
@@ -57,5 +60,16 @@ public class ProductsResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(200));
+    }
+
+    @Test
+    public void should_get_404_when_product_not_found() {
+        when(mockProductRepository.findProductById(100)).thenThrow(new ProductNotFoundException());
+
+        final Response response = target("/products/100")
+                .request()
+                .get();
+
+        assertThat(response.getStatus(), is(404));
     }
 }
