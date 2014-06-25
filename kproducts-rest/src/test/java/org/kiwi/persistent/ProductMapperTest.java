@@ -8,6 +8,7 @@ import org.kiwi.domain.Price;
 import org.kiwi.domain.Product;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -44,7 +45,12 @@ public class ProductMapperTest {
 
     @Test
     public void should_get_products() {
-        assertThat(productMapper.all().size(), is(2));
+        final List<Product> products = productMapper.all();
+        assertThat(products.size(), is(2));
+
+        final Product product = products.get(0);
+        assertThat(product.getName(), is("apple juice"));
+        assertThat(product.getCurrentPrice().getPrice(), is(120));
     }
 
     @Test
