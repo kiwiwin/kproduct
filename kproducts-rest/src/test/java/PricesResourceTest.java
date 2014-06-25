@@ -8,6 +8,7 @@ import org.kiwi.domain.PriceMapper;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 import org.kiwi.resource.exception.ProductNotFoundExceptionHandler;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -21,6 +22,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,4 +67,21 @@ public class PricesResourceTest extends JerseyTest {
         assertThat((String)price.get("uri"), endsWith("products/1/prices/1"));
     }
 
+    @Test
+    public void should_get_price_of_a_product() {
+        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
+        when(mockPriceMapper.getPrice(anyObject(), eq(2))).thenReturn(new Price(2, 300));
+
+        final Response response = target("/products/1/prices/2")
+                .request()
+                .get();
+
+
+        assertThat(response.getStatus(), is(200));
+
+        final Map price = response.readEntity(Map.class);
+
+        assertThat(price.get("price"), is(300));
+        assertThat((String) price.get("uri"), endsWith("products/1/prices/2"));
+    }
 }
