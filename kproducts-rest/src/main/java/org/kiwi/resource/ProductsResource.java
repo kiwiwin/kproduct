@@ -19,6 +19,11 @@ public class ProductsResource {
     @Inject
     private ProductRepository productRepository;
 
+    @Path("{productId}/prices")
+    public PricesResource getPriceOfProduct(@PathParam("productId") int productId) {
+        return new PricesResource();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<ProductRefJson> getAllProducts(@Context UriInfo uriInfo) {
