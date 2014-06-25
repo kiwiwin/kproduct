@@ -25,8 +25,8 @@
         select Products.id as productId, Products.name as productName, Products.description as productDescription,
         Prices.id as priceId, Prices.price as pricePrice, Prices.modified_timestamp as priceModifiedTimestamp, Prices.modified_by as priceModifiedBy
         from Products left join
-        (select p.id as pId, max(pri.modified_timestamp) as priId from Products p left join Prices pri on p.id = pri.product_id group by p.id) as maxIds on Products.id = maxIds.pId
-        left join Prices on priId = Prices.modified_timestamp
+        (select p.id as pId, max(pri.modified_timestamp) as priceModifiedTimestamp from Products p left join Prices pri on p.id = pri.product_id group by p.id) as maxIds on Products.id = maxIds.pId
+        left join Prices on priceModifiedTimestamp = Prices.modified_timestamp
     </select>
 
     <select id="findProductById" resultMap="resultProduct">
