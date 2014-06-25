@@ -36,7 +36,8 @@ public class ProductsResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createProduct(CreateProductJson product) {
-        return Response.status(201).build();
+    public Response createProduct(CreateProductJson createProductJson, @Context UriInfo uriInfo) {
+        final Product newProduct = productRepository.createProduct(createProductJson.getProduct());
+        return Response.status(201).header("location", new ProductRefJson(uriInfo, newProduct).getUri()).build();
     }
 }
