@@ -7,8 +7,8 @@ import org.kiwi.domain.Price;
 import org.kiwi.domain.PriceMapper;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
+import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.exception.ProductNotFoundExceptionHandler;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -102,5 +102,18 @@ public class PricesResourceTest extends JerseyTest {
 
         assertThat(response.getStatus(), is(201));
         assertThat(response.getHeaderString("location"), endsWith("products/1/prices/3"));
+    }
+
+    @Test
+    public void should_get_404_when_price_not_exist() {
+        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
+        when(mockPriceMapper.getPrice(anyObject(), eq(2))).thenThrow(new ResourceNotFoundException());
+
+        final Response response = target("/products/1/prices/2")
+                .request()
+                .get();
+
+
+        assertThat(response.getStatus(), is(404));
     }
 }
