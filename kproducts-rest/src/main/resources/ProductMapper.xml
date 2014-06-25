@@ -4,10 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.kiwi.persistent.ProductMapper">
     <resultMap id="resultProduct" type="org.kiwi.domain.Product">
-        <id property="id" column="id"/>
-        <result property="name" column="name"/>
-        <result property="description" column="description"/>
+        <id property="id" column="productId"/>
+        <result property="name" column="productName"/>
+        <result property="description" column="productDescription"/>
+
+        <association property="currentPrice" javaType="org.kiwi.domain.Price">
+            <id property="id" column="priceId"/>
+            <result property="price" column="pricePrice"/>
+            <result property="modifiedTimestamp" column="priceModifiedTimestamp"/>
+            <result property="modifiedBy" column="priceModifiedBy"/>
+        </association>
     </resultMap>
+
 
     <insert id="createProduct" parameterType="org.kiwi.domain.Product" keyProperty="product.id" useGeneratedKeys="true">
         insert into Products (name, description) values (#{product.name}, #{product.description});
@@ -18,6 +26,9 @@
     </select>
 
     <select id="findProductById" resultMap="resultProduct">
-        select * from Products where id=#{id};
+        select Products.id as productId, Products.name as productName, Products.description as productDescription,
+        Prices.id as priceId, Prices.price as pricePrice, Prices.modified_timestamp as priceModifiedTimestamp, Prices.modified_by as priceModifiedBy
+        from Products left join Prices on Products.id = Prices.product_id
+        where Products.id = #{id} and Prices.id = (select max(Prices.id) from Prices where product_id = #{id} group by product_id)
     </select>
 </mapper>

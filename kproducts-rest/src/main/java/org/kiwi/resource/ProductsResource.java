@@ -1,6 +1,6 @@
 package org.kiwi.resource;
 
-import org.kiwi.domain.PriceMapper;
+import org.kiwi.persistent.PriceMapper;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 import org.kiwi.json.CreateProductJson;

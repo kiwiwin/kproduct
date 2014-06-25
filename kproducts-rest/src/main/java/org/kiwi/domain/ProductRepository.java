@@ -8,4 +8,5 @@ public interface ProductRepository {
     Product findProductById(int productId);
 
     Product createProduct(Product product);
+
 }

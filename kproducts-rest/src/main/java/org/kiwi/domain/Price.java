@@ -8,6 +8,10 @@ public class Price {
     private String modifiedBy;
     private Timestamp modifiedTimestamp;
 
+    public Price() {
+
+    }
+
     public Price(int price, String modifiedBy, Timestamp modifiedTimestamp) {
         this.price = price;
         this.modifiedBy = modifiedBy;

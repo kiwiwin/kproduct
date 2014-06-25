@@ -1,5 +1,6 @@
 package org.kiwi.persistent;
 
+import org.kiwi.domain.Price;
 import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 
@@ -20,4 +21,5 @@ public class MybatisProductRepository implements ProductRepository {
     public Product createProduct(Product product) {
         return null;
     }
+
 }

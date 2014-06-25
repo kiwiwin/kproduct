@@ -6,6 +6,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kiwi.domain.*;
+import org.kiwi.persistent.PriceMapper;
 import org.kiwi.resource.exception.ResourceNotFoundException;
 import org.kiwi.resource.exception.ProductNotFoundExceptionHandler;
 import org.mockito.Mock;
@@ -96,7 +97,7 @@ public class PricesResourceTest extends JerseyTest {
     @Test
     public void should_create_new_price_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(productWithId(1, new Product("first", "good")));
-        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(priceWithId(3, new Price(300, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
+        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(1);
 
         HashMap newPriceJson = new HashMap<String, String>();
         newPriceJson.put("price", 300);
@@ -106,7 +107,6 @@ public class PricesResourceTest extends JerseyTest {
                 .post(Entity.entity(newPriceJson, MediaType.APPLICATION_JSON));
 
         assertThat(response.getStatus(), is(201));
-        assertThat(response.getHeaderString("location"), endsWith("products/1/prices/3"));
     }
 
     @Test
