@@ -47,4 +47,15 @@ public class ProductsResourceTest extends JerseyTest {
         final List products = response.readEntity(List.class);
         assertThat(products.size(), is(2));
     }
+
+    @Test
+    public void should_get_one_product() {
+        when(mockProductRepository.findProductById(1)).thenReturn(new Product("first"));
+
+        final Response response = target("/products/1")
+                .request()
+                .get();
+
+        assertThat(response.getStatus(), is(200));
+    }
 }
