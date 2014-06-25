@@ -12,9 +12,12 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,5 +86,21 @@ public class PricesResourceTest extends JerseyTest {
 
         assertThat(price.get("price"), is(300));
         assertThat((String) price.get("uri"), endsWith("products/1/prices/2"));
+    }
+
+    @Test
+    public void should_create_new_price_of_a_product() {
+        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
+        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(new Price(3, 100));
+
+        HashMap newPriceJson = new HashMap<String, String>();
+        newPriceJson.put("price", 100);
+
+        final Response response = target("/products/1/prices")
+                .request()
+                .post(Entity.entity(newPriceJson, MediaType.APPLICATION_JSON));
+
+        assertThat(response.getStatus(), is(201));
+        assertThat(response.getHeaderString("location"), endsWith("products/1/prices/3"));
     }
 }
