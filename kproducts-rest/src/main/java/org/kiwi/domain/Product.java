@@ -6,8 +6,9 @@ public class Product {
     private String name;
     private String description;
 
-    public Product(String name) {
+    public Product(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     public Product(int id, String name, String description) {

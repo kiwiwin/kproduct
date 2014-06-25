@@ -2,7 +2,7 @@ package org.kiwi.domain;
 
 public class Price {
     private int price;
-    private int id;
+    int id;
 
     public Price(int price) {
         this.price = price;
