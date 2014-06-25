@@ -15,8 +15,10 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
@@ -46,7 +48,7 @@ public class PricesResourceTest extends JerseyTest {
     @Test
     public void should_get_all_prices_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
-        when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(new Price(120), new Price(200)));
+        when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(new Price(1, 120), new Price(2, 200)));
 
         final Response response = target("/products/1/prices")
                 .request()
@@ -57,5 +59,10 @@ public class PricesResourceTest extends JerseyTest {
 
         final List prices = response.readEntity(List.class);
         assertThat(prices.size(), is(2));
+
+        final Map price = (Map) prices.get(0);
+        assertThat(price.get("price"), is(120));
+        assertThat((String)price.get("uri"), endsWith("products/1/prices/1"));
     }
+
 }

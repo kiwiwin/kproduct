@@ -6,7 +6,9 @@ import org.kiwi.json.PriceRefJson;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +23,9 @@ public class PricesResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<PriceRefJson> getAllPricesOfProduct() {
+    public List<PriceRefJson> getAllPricesOfProduct(@Context UriInfo uriInfo) {
         return priceMapper.getProductPrices(product).stream()
-                .map(price -> new PriceRefJson(product, price))
+                .map(price -> new PriceRefJson(uriInfo, product, price))
                 .collect(Collectors.toList());
     }
 }
