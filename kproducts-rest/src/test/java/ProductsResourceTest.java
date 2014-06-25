@@ -1,26 +1,50 @@
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.kiwi.domain.Product;
+import org.kiwi.domain.ProductRepository;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProductsResourceTest extends JerseyTest {
+    @Mock
+    private ProductRepository mockProductRepository;
+
     @Override
     protected Application configure() {
         return new ResourceConfig()
-                .packages(true, "org.kiwi.resource");
+                .packages(true, "org.kiwi.resource")
+                .register(new AbstractBinder() {
+                    @Override
+                    protected void configure() {
+                        bind(mockProductRepository).to(ProductRepository.class);
+                    }
+                });
     }
 
     @Test
     public void should_get_all_products() {
+        when(mockProductRepository.all()).thenReturn(Arrays.asList(new Product("first"), new Product("second")));
+
         final Response response = target("/products")
                 .request()
                 .get();
 
         assertThat(response.getStatus(), is(200));
+        final List products = response.readEntity(List.class);
+        assertThat(products.size(), is(2));
     }
 }

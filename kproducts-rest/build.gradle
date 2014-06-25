@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'flyway'
 apply plugin: 'idea'
 apply plugin: 'java'
-apply plugin: 'spring-boot'
+//apply plugin: 'spring-boot'
 
 flyway {
     driver = 'org.postgresql.Driver'
