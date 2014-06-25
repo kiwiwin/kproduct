@@ -2,6 +2,7 @@ package org.kiwi.domain;
 
 public class Product {
     int id;
+
     private String name;
 
     public Product(String name) {
@@ -15,6 +16,10 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getId() {

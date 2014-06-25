@@ -11,10 +11,13 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +25,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -84,5 +88,21 @@ public class ProductsResourceTest extends JerseyTest {
                 .get();
 
         assertThat(response.getStatus(), is(404));
+    }
+
+    @Test
+    public void should_create_product() {
+        final Product product = new Product("new product");
+        final Product newProduct = new Product(1, "new product");
+        when(mockProductRepository.createProduct(product)).thenReturn(newProduct);
+
+        HashMap newProductJson = new HashMap<String, String>();
+        newProductJson.put("name", "new juice");
+
+        final Response response = target("/products")
+                .request()
+                .post(Entity.entity(newProductJson, MediaType.APPLICATION_JSON));
+
+        assertThat(response.getStatus(), is(201));
     }
 }
