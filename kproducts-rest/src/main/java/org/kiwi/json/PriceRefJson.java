@@ -4,6 +4,7 @@ import org.kiwi.domain.Price;
 import org.kiwi.domain.Product;
 
 import javax.ws.rs.core.UriInfo;
+import java.sql.Timestamp;
 
 public class PriceRefJson {
     private final Product product;
@@ -27,5 +28,9 @@ public class PriceRefJson {
 
     public String getModifiedBy() {
         return price.getModifiedBy();
+    }
+
+    public String getModifiedTimestamp() {
+        return price.getModifiedTimestamp().toString();
     }
 }

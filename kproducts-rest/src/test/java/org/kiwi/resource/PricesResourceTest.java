@@ -15,6 +15,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public class PricesResourceTest extends JerseyTest {
     @Test
     public void should_get_all_prices_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
-        when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(priceWithId(1, new Price(120, "kiwi")), priceWithId(2, new Price(200, "kiwi"))));
+        when(mockPriceMapper.getProductPrices(anyObject())).thenReturn(Arrays.asList(priceWithId(1, new Price(120, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0))), priceWithId(2, new Price(200, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0)))));
 
         final Response response = target("/products/1/prices")
                 .request()
@@ -74,7 +75,7 @@ public class PricesResourceTest extends JerseyTest {
     @Test
     public void should_get_price_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(productWithId(1, new Product("first", "good")));
-        when(mockPriceMapper.getPrice(anyObject(), eq(2))).thenReturn(priceWithId(2, new Price(300, "kiwi")));
+        when(mockPriceMapper.getPrice(anyObject(), eq(2))).thenReturn(priceWithId(2, new Price(300, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
 
         final Response response = target("/products/1/prices/2")
                 .request()
@@ -85,15 +86,17 @@ public class PricesResourceTest extends JerseyTest {
 
         final Map price = response.readEntity(Map.class);
 
+
         assertThat(price.get("price"), is(300));
         assertThat(price.get("modifiedBy"), is("kiwi"));
+        assertThat(price.get("modifiedTimestamp"), is("2014-02-01 00:00:00.0"));
         assertThat((String) price.get("uri"), endsWith("products/1/prices/2"));
     }
 
     @Test
     public void should_create_new_price_of_a_product() {
         when(mockProductRepository.findProductById(1)).thenReturn(productWithId(1, new Product("first", "good")));
-        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(priceWithId(3, new Price(300, "kiwi")));
+        when(mockPriceMapper.createPrice(anyObject(), anyObject())).thenReturn(priceWithId(3, new Price(300, "kiwi", new Timestamp(114, 1, 1, 0, 0, 0, 0))));
 
         HashMap newPriceJson = new HashMap<String, String>();
         newPriceJson.put("price", 300);
