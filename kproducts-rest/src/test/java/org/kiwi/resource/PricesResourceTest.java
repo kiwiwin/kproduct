@@ -70,7 +70,7 @@ public class PricesResourceTest extends JerseyTest {
 
         final Map price = (Map) prices.get(0);
         assertThat(price.get("price"), is(120));
-        assertThat((String)price.get("uri"), endsWith("products/1/prices/1"));
+        assertThat((String) price.get("uri"), endsWith("products/1/prices/1"));
     }
 
     @Test
@@ -101,6 +101,8 @@ public class PricesResourceTest extends JerseyTest {
 
         HashMap newPriceJson = new HashMap<String, String>();
         newPriceJson.put("price", 300);
+        newPriceJson.put("modifiedBy", "kiwi");
+        newPriceJson.put("modifiedTimestamp", new Timestamp(114, 1, 1, 0, 0, 0, 0));
 
         final Response response = target("/products/1/prices")
                 .request()
