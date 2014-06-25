@@ -20,4 +20,8 @@ public class ProductRefJson {
     public String getUri() {
         return uriInfo.getBaseUri() + "products/" + product.getId();
     }
+
+    public String getDescription() {
+        return product.getDescription();
+    }
 }

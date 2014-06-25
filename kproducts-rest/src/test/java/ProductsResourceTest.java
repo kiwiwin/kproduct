@@ -7,7 +7,6 @@ import org.kiwi.domain.Product;
 import org.kiwi.domain.ProductRepository;
 import org.kiwi.resource.exception.ProductNotFoundException;
 import org.kiwi.resource.exception.ProductNotFoundExceptionHandler;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -15,7 +14,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,10 +22,8 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.junit.Assert.assertThat;
-
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,7 +46,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_all_products() {
-        when(mockProductRepository.all()).thenReturn(Arrays.asList(new Product(1, "first"), new Product(2, "second")));
+        when(mockProductRepository.all()).thenReturn(Arrays.asList(new Product(1, "first", "good"), new Product(2, "second", "good")));
 
         final Response response = target("/products")
                 .request()
@@ -67,7 +63,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_get_one_product() {
-        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first"));
+        when(mockProductRepository.findProductById(1)).thenReturn(new Product(1, "first", "good"));
 
         final Response response = target("/products/1")
                 .request()
@@ -77,6 +73,7 @@ public class ProductsResourceTest extends JerseyTest {
         final Map product = response.readEntity(Map.class);
 
         assertThat(product.get("name"), is("first"));
+        assertThat(product.get("description"), is("good"));
         assertThat((String)product.get("uri"), endsWith("products/1"));
     }
 
@@ -94,7 +91,7 @@ public class ProductsResourceTest extends JerseyTest {
 
     @Test
     public void should_create_product() {
-        final Product newProduct = new Product(1, "new product");
+        final Product newProduct = new Product(1, "new product", "good");
         when(mockProductRepository.createProduct(anyObject())).thenReturn(newProduct);
 
         HashMap newProductJson = new HashMap<String, String>();
